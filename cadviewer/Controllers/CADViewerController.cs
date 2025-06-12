@@ -22,6 +22,14 @@ using MimeKit;
 
 namespace cadviewer.Controllers
 {
+
+      public class LoadFileRequest
+        {
+            public string file { get; set; }
+            public string listtype { get; set; }
+            public string loadtype { get; set; }
+        }
+
     public class CADViewerController : Controller
     {
 
@@ -41,6 +49,7 @@ namespace cadviewer.Controllers
         [HttpGet]
         public JsonResult HelloWorld()
         {
+            Console.WriteLine("This is a console log!");
             return Json("Hello World!");
         }
 
@@ -840,8 +849,8 @@ namespace cadviewer.Controllers
 
         // LOADFILE2  - returning svg & bitmaps   CV 8.5.4
 
-        [HttpGet]
-        [HttpPost]
+        [HttpGet("loadfile-cv")]
+        [HttpPost("loadfile-cv")]
         public ActionResult LoadFile2(string file, string listtype, string loadtype)
         {
 
@@ -1093,14 +1102,16 @@ namespace cadviewer.Controllers
 
 
 
-
+      
 
         // LOADFILE   - loading of content to populate CADViewer interface and other stuff such as redlines
-        [HttpGet]
-        [HttpPost]
-        public JsonResult LoadFile(string file, string listtype, string loadtype)
+        [HttpGet("loadfile")]
+        [HttpPost("loadfile")]
+        public IActionResult  LoadFile([FromBody] LoadFileRequest request)
         {
-
+            string file =request.file;
+            string listtype = request.listtype;
+            string loadtype = request.loadtype;
             bool cvjs_debug = true;
             string[] myoutput = new String[1];
             string absFilePath = "";
@@ -1212,6 +1223,11 @@ namespace cadviewer.Controllers
 
                 if (cvjs_debug == true)
                 {
+                    if (string.IsNullOrEmpty(loadtype))
+                        {
+                            return BadRequest("Missing or invalid 'loadtype' parameter.");
+                        }
+
                     int mycheck = loadtype.IndexOf("redline");
                     myoutput[0] = "before check loadtype:" + loadtype + " loadtype.IndexO="+ mycheck +"  "+  "updated filePath " + filePath;
                     
@@ -2150,6 +2166,8 @@ namespace cadviewer.Controllers
         // GET: CADViewer
         public ActionResult Index()
         {
+                        Console.WriteLine("\n\nThis i!\n\n");
+
             return View();
         }
 
