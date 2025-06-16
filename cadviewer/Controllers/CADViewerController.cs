@@ -146,7 +146,7 @@ namespace cadviewer.Controllers
 
 
         // callApiConversion   - main control for conversions to SVG and PDF
-        [HttpPost]
+        [HttpPost("callapiconversion")]
         public JsonResult callApiConversion(string request)
         {
 
@@ -345,6 +345,8 @@ namespace cadviewer.Controllers
                         {
                             using (WebClient wc = new WebClient())
                             {
+                                ServicePointManager.ServerCertificateValidationCallback +=
+    (sender, cert, chain, sslPolicyErrors) => true;
                                 wc.DownloadFile(contentLocation, writeFile);
                             }
 
@@ -423,6 +425,9 @@ namespace cadviewer.Controllers
                             {
                                     using (WebClient wc = new WebClient())
                                     {
+                                        ServicePointManager.ServerCertificateValidationCallback +=
+    (sender, cert, chain, sslPolicyErrors) => true;
+
                                         wc.DownloadFile(contentLocation, writeFile);
                                     }
                             }
@@ -447,6 +452,9 @@ namespace cadviewer.Controllers
 
                             using (WebClient wc = new WebClient())
                             {
+                                ServicePointManager.ServerCertificateValidationCallback +=
+    (sender, cert, chain, sslPolicyErrors) => true;
+    //contentLocation = "c:/cadviewer-testapp-dotnet-core-01/cadviewer/wwwroot/content/drawings/dwg/hq17_.dwg";
                                 wc.DownloadFile(contentLocation, writeFile);
                             }
 
@@ -849,8 +857,8 @@ namespace cadviewer.Controllers
 
         // LOADFILE2  - returning svg & bitmaps   CV 8.5.4
 
-        [HttpGet("loadfile-cv")]
-        [HttpPost("loadfile-cv")]
+        [HttpGet("loadfile2")]
+        [HttpPost("loadfile2")]
         public ActionResult LoadFile2(string file, string listtype, string loadtype)
         {
 
@@ -1109,6 +1117,8 @@ namespace cadviewer.Controllers
         [HttpPost("loadfile")]
         public IActionResult  LoadFile([FromBody] LoadFileRequest request)
         {
+         Console.WriteLine("First in LoadFile:)))))))))))))))))))))))))))))))");
+
             string file =request.file;
             string listtype = request.listtype;
             string loadtype = request.loadtype;
