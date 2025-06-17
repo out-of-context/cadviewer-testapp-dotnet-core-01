@@ -857,271 +857,263 @@ namespace cadviewer.Controllers
 
         // LOADFILE2  - returning svg & bitmaps   CV 8.5.4
 
-        [HttpGet("loadfile2")]
-        [HttpPost("loadfile2")]
-        public ActionResult LoadFile2(string file, string listtype, string loadtype)
-        {
+//         [HttpGet("loadfile")]
+//         [HttpPost("loadfile")]
+//         public ActionResult LoadFile2(string file, string listtype, string loadtype)
+//         {
 
-            bool cvjs_debug = false;
-            string[] myoutput = new String[1];
-            string absFilePath = "";
+//             bool cvjs_debug = false;
+//             string[] myoutput = new String[1];
+//             string absFilePath = "";
 
-            try
-            {
+//             try
+//             {
    
-                Console.WriteLine("First in LoadFile:" + file + ","+listtype+","+loadtype);
+//                 Console.WriteLine("First in LoadFile:" + file + ","+listtype+","+loadtype);
 
-                string filePath = DecodeUrlString(file);
-                filePath = filePath.Trim('/');
+//                 string filePath = DecodeUrlString(file);
+//                 filePath = filePath.Trim('/');
 
-                string ServerLocation = _config.GetValue<string>("CADViewer:ServerLocation");
-                string ServerUrl = _config.GetValue<string>("CADViewer:ServerUrl");
+//                 string ServerLocation = _config.GetValue<string>("CADViewer:ServerLocation");
+//                 string ServerUrl = _config.GetValue<string>("CADViewer:ServerUrl");
 
             
-                cvjs_debug = _config.GetValue<bool>("CADViewer:cvjs_debug");
-                //cvjs_debug = false;  // multiple load  will overwrite output file and crash execution
+//                 cvjs_debug = _config.GetValue<bool>("CADViewer:cvjs_debug");
+//                 //cvjs_debug = false;  // multiple load  will overwrite output file and crash execution
             
-                if (cvjs_debug == true)
-                {
+//                 if (cvjs_debug == true)
+//                 {
 
-                    string wwwPath = _env.WebRootPath;
-                    string contentPath = _env.ContentRootPath;
-                    string path = Path.Combine(_env.WebRootPath, "temp_debug");
-
-
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-                    absFilePath = Path.Combine(path, "LoadFile2_Log_"+ Guid.NewGuid().ToString() + ".txt");
-                }
+//                     string wwwPath = _env.WebRootPath;
+//                     string contentPath = _env.ContentRootPath;
+//                     string path = Path.Combine(_env.WebRootPath, "temp_debug");
 
 
-                if (cvjs_debug == true)
-                {
-                    myoutput[0] = "First in LoadFile:" + file + ","+listtype+","+loadtype;
-                    System.IO.File.AppendAllLines(absFilePath, myoutput);
-                }
+//                     if (!Directory.Exists(path))
+//                     {
+//                         Directory.CreateDirectory(path);
+//                     }
+//                     absFilePath = Path.Combine(path, "LoadFile2_Log_"+ Guid.NewGuid().ToString() + ".txt");
+//                 }
+
+
+//                 if (cvjs_debug == true)
+//                 {
+//                     myoutput[0] = "First in LoadFile:" + file + ","+listtype+","+loadtype;
+//                     System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                 }
 
 
 
-                if (cvjs_debug == true)
-                {
-                    myoutput[0] = "LoadFile:" + filePath;
-                    System.IO.File.AppendAllLines(absFilePath, myoutput);
-                }
+//                 if (cvjs_debug == true)
+//                 {
+//                     myoutput[0] = "LoadFile:" + filePath;
+//                     System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                 }
 
           
 
-                /*
-                string ServerLocation = AppSettings.Instance.Get<string>("CADViewer:ServerLocation"); 
-                string ServerUrl = AppSettings.Instance.Get<string>("CADViewer:ServerUrl"); 
-                */
+//                 /*
+//                 string ServerLocation = AppSettings.Instance.Get<string>("CADViewer:ServerLocation"); 
+//                 string ServerUrl = AppSettings.Instance.Get<string>("CADViewer:ServerUrl"); 
+//                 */
 
-                if (listtype != null)
-                {
-                    string myloadtype = listtype.Trim('/');
-                    if (myloadtype.IndexOf("serverfolder") == 0 )     // CV 8.5.1
-                    {
+//                 if (listtype != null)
+//                 {
+//                     string myloadtype = listtype.Trim('/');
+//                     if (myloadtype.IndexOf("serverfolder") == 0 )     // CV 8.5.1
+//                     {
 
-                        if (filePath.IndexOf(ServerUrl) == 0)
-                        {
-                            //do nothing!! - handle below
-                        }
-                        else
-                            filePath = ServerLocation + filePath;
-
-
-                            if (cvjs_debug == true)
-                            {
-                                myoutput[0] = "loadtype:" + myloadtype + "  updated filePath " + filePath;
-                                System.IO.File.AppendAllLines(absFilePath, myoutput);
-                            }
+//                         if (filePath.IndexOf(ServerUrl) == 0)
+//                         {
+//                             //do nothing!! - handle below
+//                         }
+//                         else
+//                             filePath = ServerLocation + filePath;
 
 
-                    }
-
-                }
-
-
-                if (listtype != null  && listtype == "none")
-                {
-                    string myloadtype = loadtype.Trim('/');
-                    if (myloadtype.IndexOf("menufile") == 0 )     // CV 8.5.1
-                    {
-
-                        if (filePath.IndexOf(ServerUrl) == 0)
-                        {
-                            //do nothing!! - handle below
-                        }
-                        else
-                            filePath = ServerLocation + filePath;
-
-                            if (cvjs_debug == true)
-                            {
-                                myoutput[0] = "loadtype:" + myloadtype + "  updated filePath " + filePath;
-                                System.IO.File.AppendAllLines(absFilePath, myoutput);
-                            }
+//                             if (cvjs_debug == true)
+//                             {
+//                                 myoutput[0] = "loadtype:" + myloadtype + "  updated filePath " + filePath;
+//                                 System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                             }
 
 
-                    }
+//                     }
 
-                }
+//                 }
 
-                if (cvjs_debug == true)
-                {
-                    int mycheck = loadtype.IndexOf("redline");
-                    myoutput[0] = "before check loadtype:" + loadtype + " loadtype.IndexO="+ mycheck +"  "+  "updated filePath " + filePath;
+
+//                 if (listtype != null  && listtype == "none")
+//                 {
+//                     string myloadtype = loadtype.Trim('/');
+//                     if (myloadtype.IndexOf("menufile") == 0 )     // CV 8.5.1
+//                     {
+
+//                         if (filePath.IndexOf(ServerUrl) == 0)
+//                         {
+//                             //do nothing!! - handle below
+//                         }
+//                         else
+//                             filePath = ServerLocation + filePath;
+
+//                             if (cvjs_debug == true)
+//                             {
+//                                 myoutput[0] = "loadtype:" + myloadtype + "  updated filePath " + filePath;
+//                                 System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                             }
+
+
+//                     }
+
+//                 }
+
+//                 if (cvjs_debug == true)
+//                 {
+//                     int mycheck = loadtype.IndexOf("redline");
+//                     myoutput[0] = "before check loadtype:" + loadtype + " loadtype.IndexO="+ mycheck +"  "+  "updated filePath " + filePath;
                     
-                    System.IO.File.AppendAllLines(absFilePath, myoutput);
-                }
+//                     System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                 }
 
 
 
-                if (loadtype != null  && loadtype.IndexOf("redline") == 0){
+//                 if (loadtype != null  && loadtype.IndexOf("redline") == 0){
 
-                    if (filePath.IndexOf(ServerUrl) == 0)
-                    {
-                        //do nothing!! - handle below
-                    }
-                    else
-                        filePath = ServerLocation + filePath;
+//                     if (filePath.IndexOf(ServerUrl) == 0)
+//                     {
+//                         //do nothing!! - handle below
+//                     }
+//                     else
+//                         filePath = ServerLocation + filePath;
 
-                    if (cvjs_debug == true)
-                    {
-                        myoutput[0] = "redline loadtype:" + loadtype + "  updated filePath " + filePath;
-                        System.IO.File.AppendAllLines(absFilePath, myoutput);
-                    }
+//                     if (cvjs_debug == true)
+//                     {
+//                         myoutput[0] = "redline loadtype:" + loadtype + "  updated filePath " + filePath;
+//                         System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                     }
                     
-                }
+//                 }
 
 
-                if (filePath.IndexOf(ServerUrl) == 0)
-                {
-                    filePath = ServerLocation + filePath.Substring(ServerUrl.Length);
-                }
+//                 if (filePath.IndexOf(ServerUrl) == 0)
+//                 {
+//                     filePath = ServerLocation + filePath.Substring(ServerUrl.Length);
+//                 }
 
 
 
-                if (cvjs_debug == true)
-                {
-                    myoutput[0] = "after ServerUrl match check: filePath: " + filePath;
-                    System.IO.File.AppendAllLines(absFilePath, myoutput);
-                }
+//                 if (cvjs_debug == true)
+//                 {
+//                     myoutput[0] = "after ServerUrl match check: filePath: " + filePath;
+//                     System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                 }
 
-                string localPath = "";
+//                 string localPath = "";
 
-                if (System.IO.File.Exists(filePath)){       
-                    localPath = new Uri(filePath).LocalPath;
-                }
-                else
-                {
+//                 if (System.IO.File.Exists(filePath)){       
+//                     localPath = new Uri(filePath).LocalPath;
+//                 }
+//                 else
+//                 {
 
-                    if (cvjs_debug == true)
-                    {
-                        myoutput[0] = "Error: file does not exist ";
-                        System.IO.File.AppendAllLines(absFilePath, myoutput);
-                    }
-//                    return Json("file does not exist");
+//                     if (cvjs_debug == true)
+//                     {
+//                         myoutput[0] = "Error: file does not exist ";
+//                         System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                     }
+// //                    return Json("file does not exist");
 
-                        byte[] bytes = new byte[100];
-                        return File(bytes, "text/plain");
+//                         byte[] bytes = new byte[100];
+//                         return File(bytes, "text/plain");
 
-                }
+//                 }
 
-                using (FileStream fsSource = new FileStream(localPath, FileMode.Open, FileAccess.Read))
-                {
+//                 using (FileStream fsSource = new FileStream(localPath, FileMode.Open, FileAccess.Read))
+//                 {
 
-                    // Read the source file into a byte array.
-                    byte[] bytes = new byte[fsSource.Length];
-                    int numBytesToRead = (int)fsSource.Length;
-                    int numBytesRead = 0;
-                    while (numBytesToRead > 0)
-                    {
-                        // Read may return anything from 0 to numBytesToRead.
-                        int n = fsSource.Read(bytes, numBytesRead, numBytesToRead);
+//                     // Read the source file into a byte array.
+//                     byte[] bytes = new byte[fsSource.Length];
+//                     int numBytesToRead = (int)fsSource.Length;
+//                     int numBytesRead = 0;
+//                     while (numBytesToRead > 0)
+//                     {
+//                         // Read may return anything from 0 to numBytesToRead.
+//                         int n = fsSource.Read(bytes, numBytesRead, numBytesToRead);
 
-                        // Break when the end of the file is reached.
-                        if (n == 0)
-                            break;
+//                         // Break when the end of the file is reached.
+//                         if (n == 0)
+//                             break;
 
-                        numBytesRead += n;
-                        numBytesToRead -= n;
-                    }
-                    numBytesToRead = bytes.Length;
+//                         numBytesRead += n;
+//                         numBytesToRead -= n;
+//                     }
+//                     numBytesToRead = bytes.Length;
 
-                    UTF8Encoding temp = new UTF8Encoding(true);
-                    //return (temp.GetString(bytes));
+//                     UTF8Encoding temp = new UTF8Encoding(true);
+//                     //return (temp.GetString(bytes));
 
-                    var returnfile = temp.GetString(bytes);
+//                     var returnfile = temp.GetString(bytes);
 
-                    if (filePath.IndexOf(".svg")>-1){
-                        myoutput[0] = "returning  svg "+filePath;
-                        if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                     if (filePath.IndexOf(".svg")>-1){
+//                         myoutput[0] = "returning  svg "+filePath;
+//                         if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
 
-                        return (File(bytes, "image/svg+xml"));
-                    }
-                    else
-                    if (filePath.IndexOf(".png")>-1){
-                        myoutput[0] = "returning  png "+filePath;
-                        if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
-                        return File(bytes, "image/png");
-                    }
-                    else
-                    if (filePath.IndexOf(".gif")>-1){
-                        myoutput[0] = "returning  gif "+filePath;
-                        if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
-                        return File(bytes, "image/gif");
-                    }
-                    else
-                    if (filePath.IndexOf(".jpg")>-1){
-                        myoutput[0] = "returning  jpg "+filePath;
-                        if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
-                        return File(bytes, "image/jpg");
-                    }
-                    else{
-                        myoutput[0] = "returning  plain text "+filePath;
-                        if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
-                        return File(bytes, "text/plain");
-                    }
+//                         return (File(bytes, "image/svg+xml"));
+//                     }
+//                     else
+//                     if (filePath.IndexOf(".png")>-1){
+//                         myoutput[0] = "returning  png "+filePath;
+//                         if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                         return File(bytes, "image/png");
+//                     }
+//                     else
+//                     if (filePath.IndexOf(".gif")>-1){
+//                         myoutput[0] = "returning  gif "+filePath;
+//                         if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                         return File(bytes, "image/gif");
+//                     }
+//                     else
+//                     if (filePath.IndexOf(".jpg")>-1){
+//                         myoutput[0] = "returning  jpg "+filePath;
+//                         if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                         return File(bytes, "image/jpg");
+//                     }
+//                     else{
+//                         myoutput[0] = "returning  plain text "+filePath;
+//                         if (cvjs_debug) System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                         return File(bytes, "text/plain");
+//                     }
 
-                }
+//                 }
 
                 
-            }
-            catch (FileNotFoundException ioEx)
-            {
+//             }
+//             catch (FileNotFoundException ioEx)
+//             {
 
-                if (cvjs_debug == true)
-                {
-                    myoutput[0] = "FileNotFoundException:"+ ioEx;
-                    System.IO.File.AppendAllLines(absFilePath, myoutput);
-                }
-                        byte[] bytes = new byte[100];
-                        return File(bytes, "text/plain");
-            }
+//                 if (cvjs_debug == true)
+//                 {
+//                     myoutput[0] = "FileNotFoundException:"+ ioEx;
+//                     System.IO.File.AppendAllLines(absFilePath, myoutput);
+//                 }
+//                         byte[] bytes = new byte[100];
+//                         return File(bytes, "text/plain");
+//             }
 
-        }
+//         }
 
-
-
-
-
-
-
-
-      
 
         // LOADFILE   - loading of content to populate CADViewer interface and other stuff such as redlines
         [HttpGet("loadfile")]
         [HttpPost("loadfile")]
-        public IActionResult  LoadFile([FromBody] LoadFileRequest request)
+        public ActionResult  LoadFile(string file, string listtype, string loadtype)
         {
          Console.WriteLine("First in LoadFile:)))))))))))))))))))))))))))))))");
 
-            string file =request.file;
-            string listtype = request.listtype;
-            string loadtype = request.loadtype;
+            // string file =request.file;
+            // string listtype = request.listtype;
+            // string loadtype = request.loadtype;
             bool cvjs_debug = true;
             string[] myoutput = new String[1];
             string absFilePath = "";
@@ -1769,7 +1761,7 @@ namespace cadviewer.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost("listdirectory")]
         public JsonResult ListDirectoryContent(string directory, string listtype)
         {
 
